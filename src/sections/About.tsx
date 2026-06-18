@@ -214,7 +214,7 @@ export default function About() {
             {/* Bio paragraphs */}
             <div className="space-y-4 text-foreground-dim text-[0.975rem] sm:text-base leading-[1.8]">
               <p>
-                Malika Degadoruwa is a passionate and dynamic professional
+                Malika Degaldoruwa is a passionate and dynamic professional
                 drummer from Sri Lanka. He discovered his love for rhythm at the
                 age of&nbsp;10, beginning his journey with 2000s pop music
                 before diving headfirst into the world of metal. Inspired by
