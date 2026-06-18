@@ -1,96 +1,92 @@
 @import "tailwindcss";
+@config "../tailwind.config.ts";
 
-@theme {
-  /* Brand palette */
-  --color-brand-gold:      #d4af37;
-  --color-brand-gold-dim:  #a88a20;
-  --color-brand-purple:    #7c3aed;
-  --color-brand-crimson:   #dc2626;
+/*
+ * CSS custom properties — theme-switchable values.
+ * Dark mode is the default (:root). Light mode is toggled via html.light class.
+ * Violet (gold token) and ember (accent token) are fixed — no theme variant.
+ */
+@layer base {
+  :root {
+    /* Surface — dark */
+    --surface-900: #0a0a0a;
+    --surface-800: #111111;
+    --surface-700: #1a1a1a;
+    --surface-600: #242424;
+    --surface-500: #333333;
 
-  /* Surface */
-  --color-surface-900:     #0a0a0a;
-  --color-surface-800:     #111111;
-  --color-surface-700:     #1a1a1a;
-  --color-surface-600:     #242424;
-  --color-surface-500:     #333333;
+    /* Foreground — dark */
+    --fg:          #f5f5f5;
+    --fg-dim:      #a3a3a3;
+    --fg-muted:    #737373;
 
-  /* Text */
-  --color-text-primary:    #f5f5f5;
-  --color-text-secondary:  #a1a1aa;
-  --color-text-muted:      #71717a;
+    /* Violet (primary brand accent) — static */
+    --gold:        #8b5cf6;
+    --gold-light:  #a78bfa;
+    --gold-dim:    #6d28d9;
 
-  /* Typography */
-  --font-sans:   'Inter', system-ui, sans-serif;
-  --font-display: 'Oswald', 'Inter', system-ui, sans-serif;
+    /* Ember orange (energy / CTA) — static */
+    --accent:      #f97316;
 
-  /* Easing */
-  --ease-snappy: cubic-bezier(0.4, 0, 0.2, 1);
+    /* Gradient text stops */
+    --grad-start:  #8b5cf6;
+    --grad-mid:    #c4b5fd;
+  }
+
+  html.light {
+    /* Surface — light */
+    --surface-900: #f5f5f5;
+    --surface-800: #ebebeb;
+    --surface-700: #e0e0e0;
+    --surface-600: #d0d0d0;
+    --surface-500: #bfbfbf;
+
+    /* Foreground — light */
+    --fg:          #111111;
+    --fg-dim:      #444444;
+    --fg-muted:    #666666;
+
+    /* Gradient text stops — darker violet so it reads on light bg */
+    --grad-start:  #6d28d9;
+    --grad-mid:    #8b5cf6;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--surface-900);
+    color: var(--fg);
+    font-family: 'Inter', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  #root { width: 100%; min-height: 100vh; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar       { width: 5px; }
+  ::-webkit-scrollbar-track { background: var(--surface-800); }
+  ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+  /* Selection */
+  ::selection { background: var(--gold); color: #fff; }
 }
 
-/* Base reset */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  background-color: var(--color-surface-900);
-  color: var(--color-text-primary);
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-}
-
-#root {
-  width: 100%;
-  min-height: 100vh;
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--color-surface-800); }
-::-webkit-scrollbar-thumb {
-  background: var(--color-brand-gold-dim);
-  border-radius: 3px;
-}
-::-webkit-scrollbar-thumb:hover { background: var(--color-brand-gold); }
-
-/* Selection */
-::selection {
-  background: var(--color-brand-gold);
-  color: var(--color-surface-900);
-}
-
-/* Utility: gold gradient text */
+/* Violet gradient text — used on headline words */
 .text-gold-gradient {
-  background: linear-gradient(135deg, #d4af37 0%, #f5d76e 50%, #d4af37 100%);
+  background: linear-gradient(135deg, var(--grad-start) 0%, var(--grad-mid) 50%, var(--grad-start) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Pulse ring animation */
+/* Pulse ring — used in Hero backdrop */
 @keyframes pulse-ring {
-  0%   { transform: scale(0.8); opacity: 0.8; }
+  0%   { transform: scale(0.9); opacity: 0.6; }
   100% { transform: scale(1.6); opacity: 0; }
-}
-
-.animate-pulse-ring {
-  animation: pulse-ring 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* Subtle drum beat bob */
-@keyframes beat-bob {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-6px); }
-}
-
-.animate-beat-bob {
-  animation: beat-bob 1.8s ease-in-out infinite;
 }
