@@ -1,33 +1,33 @@
-import { useRef } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { ChevronDown, Play, MessageCircle } from 'lucide-react'
-import { COLORS } from '@/lib/colors'
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { ChevronDown, Play, MessageCircle } from "lucide-react";
+import { COLORS } from "@/lib/colors";
 
 /* ─── Spring presets ──────────────────────────────────────────────────────── */
-const snap   = { type: 'spring', stiffness: 380, damping: 28 } as const
-const gentle = { type: 'spring', stiffness: 240, damping: 22 } as const
+const snap = { type: "spring", stiffness: 380, damping: 28 } as const;
+const gentle = { type: "spring", stiffness: 240, damping: 22 } as const;
 
 /* ─── Entry variants — spring-based, snappy ──────────────────────────────── */
 const container = {
   hidden: {},
   show: { transition: { staggerChildren: 0.12, delayChildren: 0.3 } },
-}
+};
 
 const riseUp = {
   hidden: { opacity: 0, y: 24 },
-  show:   { opacity: 1, y: 0, transition: { ...gentle } },
-}
+  show: { opacity: 1, y: 0, transition: { ...gentle } },
+};
 
 const fadeIn = {
   hidden: { opacity: 0 },
-  show:   { opacity: 1, transition: { duration: 0.6 } },
-}
+  show: { opacity: 1, transition: { duration: 0.6 } },
+};
 
 /* ─── Pulse rings — 3 rings, very restrained ─────────────────────────────── */
 function PulseRings() {
   return (
     <div className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden">
-      {[0, 1, 2].map(i => (
+      {[0, 1, 2].map((i) => (
         <motion.span
           key={i}
           className="absolute rounded-full border border-gold/[0.12]"
@@ -35,22 +35,22 @@ function PulseRings() {
           animate={{ scale: [1, 1.14, 1], opacity: [0.5, 0, 0.5] }}
           transition={{
             duration: 4,
-            ease: 'easeInOut',
+            ease: "easeInOut",
             repeat: Infinity,
             delay: i * 0.9,
           }}
         />
       ))}
     </div>
-  )
+  );
 }
 
 /* ─── Minimal accent sparks — 3 only, very subtle ────────────────────────── */
 const SPARKS = [
-  { top: '22%', left: '10%',  size: 3, delay: 0 },
-  { top: '65%', right: '9%',  size: 2, delay: 1.3 },
-  { top: '40%', right: '22%', size: 3, delay: 0.7 },
-] as const
+  { top: "22%", left: "10%", size: 3, delay: 0 },
+  { top: "65%", right: "9%", size: 2, delay: 1.3 },
+  { top: "40%", right: "22%", size: 3, delay: 0.7 },
+] as const;
 
 function AccentSparks() {
   return (
@@ -60,31 +60,39 @@ function AccentSparks() {
           key={i}
           className="absolute rounded-full bg-gold/70"
           style={{
-            top:  s.top,
-            left:  'left'  in s ? s.left  : undefined,
-            right: 'right' in s ? s.right : undefined,
-            width:  s.size,
+            top: s.top,
+            left: "left" in s ? s.left : undefined,
+            right: "right" in s ? s.right : undefined,
+            width: s.size,
             height: s.size,
           }}
           animate={{ opacity: [0, 0.8, 0], y: [0, -16, 0] }}
-          transition={{ duration: 3.5, ease: 'easeInOut', repeat: Infinity, delay: s.delay }}
+          transition={{
+            duration: 3.5,
+            ease: "easeInOut",
+            repeat: Infinity,
+            delay: s.delay,
+          }}
         />
       ))}
     </>
-  )
+  );
 }
 
 /* ─── Hero ────────────────────────────────────────────────────────────────── */
 export default function Hero() {
-  const ref = useRef<HTMLElement>(null)
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] })
+  const ref = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
 
   // Subtle parallax — background 25%, text 10%
-  const bgY   = useTransform(scrollYProgress, [0, 1], ['0%', '25%'])
-  const textY = useTransform(scrollYProgress, [0, 1], ['0%', '10%'])
+  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
+  const textY = useTransform(scrollYProgress, [0, 1], ["0%", "10%"]);
 
   const scrollTo = (href: string) =>
-    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
+    document.querySelector(href)?.scrollIntoView({ behavior: "smooth" });
 
   return (
     <section
@@ -93,7 +101,10 @@ export default function Hero() {
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-surface-900"
     >
       {/* ── Background ────────────────────────────────────────────────────── */}
-      <motion.div style={{ y: bgY }} className="absolute inset-0 will-change-transform">
+      <motion.div
+        style={{ y: bgY }}
+        className="absolute inset-0 will-change-transform"
+      >
         {/* Warm gold centre glow */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_55%_at_50%_65%,rgba(212,175,55,0.10)_0%,transparent_70%)]" />
         {/* Violet shoulder */}
@@ -104,7 +115,7 @@ export default function Hero() {
           style={{
             backgroundImage: `linear-gradient(${COLORS.gold.DEFAULT} 1px, transparent 1px),
                               linear-gradient(90deg, ${COLORS.gold.DEFAULT} 1px, transparent 1px)`,
-            backgroundSize: '56px 56px',
+            backgroundSize: "56px 56px",
           }}
         />
       </motion.div>
@@ -125,13 +136,19 @@ export default function Hero() {
         style={{ y: textY }}
         className="relative z-10 text-center px-4 sm:px-6 max-w-5xl mx-auto"
       >
-        <motion.div variants={container} initial="hidden" animate="show" className="space-y-6">
-
+        <motion.div
+          variants={container}
+          initial="hidden"
+          animate="show"
+          className="space-y-6"
+        >
           {/* Eyebrow pill */}
           <motion.div variants={fadeIn} className="flex justify-center">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full
+            <span
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full
                              border border-gold/25 bg-gold/[0.06]
-                             text-gold text-[0.7rem] font-semibold tracking-[0.2em] uppercase">
+                             text-gold text-[0.7rem] font-semibold tracking-[0.2em] uppercase"
+            >
               <span className="w-1.5 h-1.5 rounded-full bg-gold animate-pulse" />
               TikTok · @MalikaDrums
             </span>
@@ -144,13 +161,18 @@ export default function Hero() {
                        text-[clamp(3rem,10vw,6.5rem)]"
           >
             <span className="text-foreground block">MALIKA</span>
-            <span className="text-gold-gradient block">DEGADORUWA</span>
+            <span className="text-gold-gradient block">DEGALDORUWA</span>
           </motion.h1>
 
           {/* Divider */}
-          <motion.div variants={fadeIn} className="flex items-center justify-center gap-3">
+          <motion.div
+            variants={fadeIn}
+            className="flex items-center justify-center gap-3"
+          >
             <span className="h-px w-12 bg-gold/35" />
-            <span className="text-gold/70 text-base" aria-hidden>♩</span>
+            <span className="text-gold/70 text-base" aria-hidden>
+              ♩
+            </span>
             <span className="h-px w-12 bg-gold/35" />
           </motion.div>
 
@@ -172,8 +194,14 @@ export default function Hero() {
           >
             <motion.a
               href="#reels"
-              onClick={e => { e.preventDefault(); scrollTo('#reels') }}
-              whileHover={{ scale: 1.03, boxShadow: '0 6px 28px rgba(249,115,22,0.42)' }}
+              onClick={(e) => {
+                e.preventDefault();
+                scrollTo("#reels");
+              }}
+              whileHover={{
+                scale: 1.03,
+                boxShadow: "0 6px 28px rgba(249,115,22,0.42)",
+              }}
               whileTap={{ scale: 0.96 }}
               transition={snap}
               className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full
@@ -188,10 +216,13 @@ export default function Hero() {
 
             <motion.a
               href="#contact"
-              onClick={e => { e.preventDefault(); scrollTo('#contact') }}
+              onClick={(e) => {
+                e.preventDefault();
+                scrollTo("#contact");
+              }}
               whileHover={{
                 scale: 1.03,
-                boxShadow: '0 4px 24px rgba(139,92,246,0.30)',
+                boxShadow: "0 4px 24px rgba(139,92,246,0.30)",
               }}
               whileTap={{ scale: 0.96 }}
               transition={snap}
@@ -213,9 +244,9 @@ export default function Hero() {
             className="flex flex-wrap items-center justify-center gap-8 sm:gap-12 pt-6"
           >
             {[
-              { value: '15+', label: 'Years Playing' },
-              { value: '2',   label: 'Active Bands' },
-              { value: '750K+',label: 'Views on TikTok & YouTube' },
+              { value: "15+", label: "Years Playing" },
+              { value: "2", label: "Active Bands" },
+              { value: "750K+", label: "Views on TikTok & YouTube" },
             ].map((stat, i) => (
               <div key={stat.label} className="text-center">
                 {i > 0 && (
@@ -241,14 +272,16 @@ export default function Hero() {
         className="absolute bottom-7 left-1/2 -translate-x-1/2
                    flex flex-col items-center gap-1 text-foreground-muted"
       >
-        <span className="text-[0.6rem] tracking-[0.22em] uppercase">Scroll</span>
+        <span className="text-[0.6rem] tracking-[0.22em] uppercase">
+          Scroll
+        </span>
         <motion.div
           animate={{ y: [0, 5, 0] }}
-          transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
+          transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
         >
           <ChevronDown size={16} />
         </motion.div>
       </motion.div>
     </section>
-  )
+  );
 }
