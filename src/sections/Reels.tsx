@@ -5,6 +5,7 @@ import { Play, X, ExternalLink } from 'lucide-react'
 import { VIDEOS, CATEGORY_META, type CategoryId, type Video } from '@/data/videos'
 import { cn } from '@/lib/utils'
 import { COLORS } from '@/lib/colors'
+import { useTikTokThumbnail } from '@/hooks/useTikTokThumbnail'
 
 /* ─── Types ───────────────────────────────────────────────────────────────── */
 type FilterId = CategoryId | 'all'
@@ -44,6 +45,7 @@ const playVariants = {
 /* ─── Thumbnail ───────────────────────────────────────────────────────────── */
 function VideoThumbnail({ video }: { video: Video }) {
   const meta = CATEGORY_META[video.category]
+  const thumbnailUrl = useTikTokThumbnail(video.id)
 
   return (
     <div
@@ -53,26 +55,47 @@ function VideoThumbnail({ video }: { video: Video }) {
                      linear-gradient(148deg, ${COLORS.surface['700']} 0%, ${COLORS.surface['900']} 100%)`,
       }}
     >
-      {/* Decorative music glyph */}
-      <span
-        className="absolute inset-0 flex items-center justify-center
-                   text-[5rem] leading-none select-none pointer-events-none"
-        style={{ color: meta.accent, opacity: 0.06 }}
-        aria-hidden
-      >
-        ♩
-      </span>
+      {/* TikTok thumbnail — fades in once fetched; decorative gradient underneath is the fallback */}
+      <AnimatePresence>
+        {thumbnailUrl && (
+          <motion.img
+            key="thumb"
+            src={thumbnailUrl}
+            alt=""
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="absolute inset-0 w-full h-full object-cover"
+            loading="lazy"
+            draggable={false}
+          />
+        )}
+      </AnimatePresence>
 
-      {/* Category pill */}
+      {/* Decorative music glyph — only shown until a real thumbnail loads */}
+      {!thumbnailUrl && (
+        <span
+          className="absolute inset-0 flex items-center justify-center
+                     text-[5rem] leading-none select-none pointer-events-none"
+          style={{ color: meta.accent, opacity: 0.06 }}
+          aria-hidden
+        >
+          ♩
+        </span>
+      )}
+
+      {/* Category pill — opaque dark chip + white text so it reads over any photo,
+          in either light or dark theme; the accent dot keeps the color-coding. */}
       <div
-        className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-full
-                   text-[0.53rem] font-semibold tracking-wide"
+        className="absolute top-2.5 left-2.5 flex items-center gap-1.5 px-2 py-0.5 rounded-full
+                   text-[0.53rem] font-semibold tracking-wide text-white backdrop-blur-sm"
         style={{
-          background: `${meta.accent}20`,
-          color: meta.accent,
-          border: `1px solid ${meta.accent}3a`,
+          background: 'rgba(0,0,0,0.62)',
+          border: '1px solid rgba(255,255,255,0.14)',
         }}
       >
+        <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: meta.accent }} />
         {meta.label}
       </div>
 
